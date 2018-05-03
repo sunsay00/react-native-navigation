@@ -155,6 +155,22 @@ class Navigator {
     return platformSpecific.dismissContextualMenu();
   }
 
+  navigatorEventListeners = [];
+
+  addNavigatorEventListener(fn) {
+    if (this.navigatorEventListeners.indexOf(fn) == -1) {
+      this.navigatorEventListeners.push(fn);
+    }
+    if (!this.navigatorEventSubscription) {
+      let Emitter = Platform.OS === 'android' ? DeviceEventEmitter : NativeAppEventEmitter;
+      this.navigatorEventSubscription = Emitter.addListener(this.navigatorEventID, (event) => this.onNavigatorEvent(event));
+    }
+  }
+  removeNavigatorEventListener(fn) {
+    if (this.navigatorEventListeners.indexOf(fn) != -1) {
+      this.navigatorEventListeners = this.navigatorEventListeners.filter(f => f != fn);
+    }
+  }
   setOnNavigatorEvent(callback) {
     this.navigatorEventHandler = callback;
     if (!this.navigatorEventSubscription) {
@@ -172,6 +188,7 @@ class Navigator {
     if (this.navigatorEventHandler) {
       this.navigatorEventHandler(event);
     }
+    this.navigatorEventListeners.forEach(fn => fn(event));
   }
 
   cleanup() {

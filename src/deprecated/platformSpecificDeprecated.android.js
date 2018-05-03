@@ -32,7 +32,8 @@ function startSingleScreenApp(params) {
     params.appStyle.orientation = getOrientation(params);
   }
   params.sideMenu = convertDrawerParamsToSideMenuParams(params.drawer);
-  params.overrideBackPress = screen.overrideBackPress;
+  if (params.screen == undefined) params.screen = {};
+  params.screen.overrideBackPress = screen.overrideBackPress == undefined ? true : screen.overrideBackPress;
   params.animateShow = convertAnimationType(params.animationType);
 
   newPlatformSpecific.startApp(params);
@@ -78,7 +79,7 @@ function navigatorPush(navigator, params) {
   params.screenId = params.screen;
   let adapted = adaptNavigationStyleToScreenStyle(params);
   adapted = adaptNavigationParams(adapted);
-  adapted.overrideBackPress = params.overrideBackPress;
+  adapted.overrideBackPress = params.overrideBackPress == undefined ? true : params.overrideBackPress;
 
   newPlatformSpecific.push(adapted);
 }
@@ -261,7 +262,7 @@ function startTabBasedApp(params) {
 
     let newtab = adaptNavigationStyleToScreenStyle(tab);
     newtab = adaptNavigationParams(tab);
-    newtab.overrideBackPress = tab.overrideBackPress;
+    newtab.overrideBackPress = tab.overrideBackPress == undefined ? true : tab.overrideBackPress;
     newTabs.push(newtab);
   });
   params.tabs = newTabs;
@@ -420,7 +421,7 @@ function showModal(params) {
   params.screenId = params.screen;
   let adapted = adaptNavigationStyleToScreenStyle(params);
   adapted = adaptNavigationParams(adapted);
-  adapted.overrideBackPress = params.overrideBackPress;
+  adapted.overrideBackPress = params.overrideBackPress == undefined ? true : params.overrideBackPress;
 
   newPlatformSpecific.showModal(adapted);
 }
