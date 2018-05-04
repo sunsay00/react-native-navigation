@@ -1,7 +1,10 @@
 package com.reactnativenavigation.controllers;
 
+import java.util.Vector;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
@@ -159,6 +162,43 @@ public class NavigationCommandsHandler {
                 currentActivity.setTitleBarSubtitle(screenInstanceId, subtitle);
             }
         });
+    }
+
+    public static void setTouchable(final Boolean value) {
+        final NavigationActivity currentActivity = NavigationActivity.currentActivity;
+        if (currentActivity == null) {
+            return;
+        }
+
+        final Vector<Boolean> done = new Vector<Boolean>();
+        final Object mutex = new Object();
+
+        NavigationApplication.instance.runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                if (value) {
+                    currentActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                } else {
+                    currentActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                }
+
+                synchronized (mutex) {
+                    done.add(true);
+                    mutex.notifyAll();
+                }
+            }
+        });
+
+        synchronized (mutex) {
+            if (done.size() == 0) {
+                try {
+                    mutex.wait();
+                } catch (InterruptedException e) {
+                    return;
+                }
+            }
+        }
     }
 
     public static void showModal(final Bundle params) {

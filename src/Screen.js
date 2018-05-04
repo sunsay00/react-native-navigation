@@ -26,21 +26,8 @@ class Navigator {
     this._lastAction = {params: undefined, timestamp: 0};
   }
 
-  _checkLastAction(params) {
-    if (Date.now() - this._lastAction.timestamp < 1000
-      && _.isEqual(params, this._lastAction.params)
-      && !params.force) {
-      return false;
-    } else {
-      this._lastAction = {params, timestamp: Date.now()};
-      return true;
-    }
-  }
-
   push(params = {}) {
-    if(!this._checkLastAction({method: 'push', passProps: params.passProps, screen: params.screen})) {
-      return;
-    }
+    Navigation.setTouchable(false);
     return NavigationSpecific.push(this, params);
   }
 
@@ -57,14 +44,8 @@ class Navigator {
   }
 
   showModal(params = {}) {
-    if(!this._checkLastAction({method: 'showModal', passProps: params.passProps, screen: params.screen})) {
-      return;
-    }
+    Navigation.setTouchable(false);
     return Navigation.showModal(params);
-  }
-
-  showLightBox(params = {}) {
-    return Navigation.showLightBox(params);
   }
 
   dismissModal(params = {}) {
@@ -76,6 +57,7 @@ class Navigator {
   }
 
   showLightBox(params = {}) {
+    Navigation.setTouchable(false);
     return Navigation.showLightBox(params);
   }
 

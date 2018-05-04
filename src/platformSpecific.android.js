@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {AppRegistry, NativeModules} from 'react-native';
+import React, { Component } from 'react';
+import { AppRegistry, NativeModules } from 'react-native';
 import _ from 'lodash';
 import PropRegistry from './PropRegistry';
 
@@ -173,6 +173,10 @@ function setScreenStyle(screenInstanceId, style) {
   NativeReactModule.setScreenStyle(screenInstanceId, style);
 }
 
+function setTouchable(value) {
+  NativeReactModule.setTouchable(value);
+}
+
 module.exports = {
   startApp,
   push,
@@ -205,5 +209,6 @@ module.exports = {
   dismissSnackbar,
   showContextualMenu,
   dismissContextualMenu,
-  setScreenStyle
+  setScreenStyle,
+  setTouchable
 };

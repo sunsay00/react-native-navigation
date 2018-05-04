@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import Navigation from './../Navigation';
-import Controllers, {Modal, Notification} from './controllers';
+import Controllers, { Modal, Notification } from './controllers';
 const React = Controllers.hijackReact();
 const {
   ControllerRegistry,
@@ -19,7 +19,7 @@ function startTabBasedApp(params) {
   }
 
   const controllerID = _.uniqueId('controllerID');
-  params.tabs.map(function(tab, index) {
+  params.tabs.map(function (tab, index) {
     const navigatorID = controllerID + '_nav' + index;
     const screenInstanceID = _.uniqueId('screenInstanceID');
     if (!tab.screen) {
@@ -41,36 +41,36 @@ function startTabBasedApp(params) {
   });
 
   const Controller = Controllers.createClass({
-    render: function() {
+    render: function () {
       if (!params.drawer || (!params.drawer.left && !params.drawer.right)) {
         return this.renderBody();
       } else {
         const navigatorID = controllerID + '_drawer';
         return (
           <DrawerControllerIOS id={navigatorID}
-                               componentLeft={params.drawer.left ? params.drawer.left.screen : undefined}
-                               passPropsLeft={{navigatorID: navigatorID}}
-                               componentRight={params.drawer.right ? params.drawer.right.screen : undefined}
-                               passPropsRight={{navigatorID: navigatorID}}
-                               disableOpenGesture={params.drawer.disableOpenGesture}
-                               type={params.drawer.type ? params.drawer.type : 'MMDrawer'}
-                               animationType={params.drawer.animationType ? params.drawer.animationType : 'slide'}
-                               style={params.drawer.style}
-                               appStyle={params.appStyle}
+            componentLeft={params.drawer.left ? params.drawer.left.screen : undefined}
+            passPropsLeft={{ navigatorID: navigatorID }}
+            componentRight={params.drawer.right ? params.drawer.right.screen : undefined}
+            passPropsRight={{ navigatorID: navigatorID }}
+            disableOpenGesture={params.drawer.disableOpenGesture}
+            type={params.drawer.type ? params.drawer.type : 'MMDrawer'}
+            animationType={params.drawer.animationType ? params.drawer.animationType : 'slide'}
+            style={params.drawer.style}
+            appStyle={params.appStyle}
           >
             {this.renderBody()}
           </DrawerControllerIOS>
         );
       }
     },
-    renderBody: function() {
+    renderBody: function () {
       return (
         <TabBarControllerIOS
           id={controllerID + '_tabs'}
           style={params.tabsStyle}
           appStyle={params.appStyle}>
           {
-            params.tabs.map(function(tab, index) {
+            params.tabs.map(function (tab, index) {
               return (
                 <TabBarControllerIOS.Item {...tab} title={tab.label}>
                   <NavigationControllerIOS
@@ -80,10 +80,10 @@ function startTabBasedApp(params) {
                     titleImage={tab.titleImage}
                     component={tab.screen}
                     passProps={{
-                    navigatorID: tab.navigationParams.navigatorID,
-                    screenInstanceID: tab.navigationParams.screenInstanceID,
-                    navigatorEventID: tab.navigationParams.navigatorEventID
-                  }}
+                      navigatorID: tab.navigationParams.navigatorID,
+                      screenInstanceID: tab.navigationParams.screenInstanceID,
+                      navigatorEventID: tab.navigationParams.navigatorEventID
+                    }}
                     style={tab.navigationParams.navigatorStyle}
                     leftButtons={tab.navigationParams.navigatorButtons.leftButtons}
                     rightButtons={tab.navigationParams.navigatorButtons.rightButtons}
@@ -131,29 +131,29 @@ function startSingleScreenApp(params) {
   };
 
   const Controller = Controllers.createClass({
-    render: function() {
+    render: function () {
       if (!params.drawer || (!params.drawer.left && !params.drawer.right)) {
         return this.renderBody();
       } else {
         const navigatorID = controllerID + '_drawer';
         return (
           <DrawerControllerIOS id={navigatorID}
-                               componentLeft={params.drawer.left ? params.drawer.left.screen : undefined}
-                               passPropsLeft={{navigatorID: navigatorID}}
-                               componentRight={params.drawer.right ? params.drawer.right.screen : undefined}
-                               passPropsRight={{navigatorID: navigatorID}}
-                               disableOpenGesture={params.drawer.disableOpenGesture}
-                               type={params.drawer.type ? params.drawer.type : 'MMDrawer'}
-                               animationType={params.drawer.animationType ? params.drawer.animationType : 'slide'}
-                               style={params.drawer.style}
-                               appStyle={params.appStyle}
+            componentLeft={params.drawer.left ? params.drawer.left.screen : undefined}
+            passPropsLeft={{ navigatorID: navigatorID }}
+            componentRight={params.drawer.right ? params.drawer.right.screen : undefined}
+            passPropsRight={{ navigatorID: navigatorID }}
+            disableOpenGesture={params.drawer.disableOpenGesture}
+            type={params.drawer.type ? params.drawer.type : 'MMDrawer'}
+            animationType={params.drawer.animationType ? params.drawer.animationType : 'slide'}
+            style={params.drawer.style}
+            appStyle={params.appStyle}
           >
             {this.renderBody()}
           </DrawerControllerIOS>
         );
       }
     },
-    renderBody: function() {
+    renderBody: function () {
       return (
         <NavigationControllerIOS
           id={navigatorID}
@@ -206,7 +206,7 @@ function _mergeScreenSpecificSettings(screenID, screenInstanceID, params) {
       navigatorButtons.rightButtons[i].onPress = navigatorEventID;
     }
   }
-  return {navigatorStyle, navigatorButtons, navigatorEventID};
+  return { navigatorStyle, navigatorButtons, navigatorEventID };
 }
 
 function navigatorPush(navigator, params) {
@@ -458,7 +458,7 @@ function showModal(params) {
   };
 
   const Controller = Controllers.createClass({
-    render: function() {
+    render: function () {
       return (
         <NavigationControllerIOS
           id={navigatorID}
@@ -469,7 +469,7 @@ function showModal(params) {
           passProps={passProps}
           style={navigatorStyle}
           leftButtons={navigatorButtons.leftButtons}
-          rightButtons={navigatorButtons.rightButtons}/>
+          rightButtons={navigatorButtons.rightButtons} />
       );
     }
   });
@@ -553,7 +553,7 @@ function showInAppNotification(params) {
     navigatorEventID,
     navigatorID
   };
-  
+
   savePassProps(params);
 
   let args = {
@@ -607,6 +607,10 @@ function dismissContextualMenu() {
   // Android only
 }
 
+function setTouchable(value) {
+  // Android only
+}
+
 export default {
   startTabBasedApp,
   startSingleScreenApp,
@@ -633,5 +637,6 @@ export default {
   navigatorSwitchToTab,
   navigatorToggleNavBar,
   showContextualMenu,
-  dismissContextualMenu
+  dismissContextualMenu,
+  setTouchable
 };

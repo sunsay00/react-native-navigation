@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React from 'react';
-import {AppRegistry} from 'react-native';
+import { AppRegistry } from 'react-native';
 import platformSpecific from './deprecated/platformSpecificDeprecated';
 import Screen from './Screen';
 
@@ -8,6 +8,7 @@ import PropRegistry from './PropRegistry';
 
 const registeredScreens = {};
 const _allNavigatorEventHandlers = {};
+let _appMode = undefined;
 
 function registerScreen(screenID, generator) {
   registeredScreens[screenID] = generator;
@@ -23,12 +24,12 @@ function registerComponent(screenID, generator, store = undefined, Provider = un
 }
 
 function _registerComponentNoRedux(screenID, generator) {
-  const generatorWrapper = function() {
+  const generatorWrapper = function () {
     const InternalComponent = generator();
     if (!InternalComponent) {
       console.error(`Navigation: ${screenID} registration result is 'undefined'`);
     }
-    
+
     return class extends Screen {
       static navigatorStyle = InternalComponent.navigatorStyle || {};
       static navigatorButtons = InternalComponent.navigatorButtons || {};
@@ -36,13 +37,13 @@ function _registerComponentNoRedux(screenID, generator) {
       constructor(props) {
         super(props);
         this.state = {
-          internalProps: {...props, ...PropRegistry.load(props.screenInstanceID)}
+          internalProps: { ...props, ...PropRegistry.load(props.screenInstanceID) }
         }
       }
 
       componentWillReceiveProps(nextProps) {
         this.setState({
-          internalProps: {...PropRegistry.load(this.props.screenInstanceID), ...nextProps}
+          internalProps: { ...PropRegistry.load(this.props.screenInstanceID), ...nextProps }
         })
       }
 
@@ -58,7 +59,7 @@ function _registerComponentNoRedux(screenID, generator) {
 }
 
 function _registerComponentRedux(screenID, generator, store, Provider, options) {
-  const generatorWrapper = function() {
+  const generatorWrapper = function () {
     const InternalComponent = generator();
     return class extends Screen {
       static navigatorStyle = InternalComponent.navigatorStyle || {};
@@ -67,13 +68,13 @@ function _registerComponentRedux(screenID, generator, store, Provider, options) 
       constructor(props) {
         super(props);
         this.state = {
-          internalProps: {...props, ...PropRegistry.load(props.screenInstanceID)}
+          internalProps: { ...props, ...PropRegistry.load(props.screenInstanceID) }
         }
       }
 
       componentWillReceiveProps(nextProps) {
         this.setState({
-          internalProps: {...PropRegistry.load(this.props.screenInstanceID), ...nextProps}
+          internalProps: { ...PropRegistry.load(this.props.screenInstanceID), ...nextProps }
         })
       }
 
@@ -131,11 +132,21 @@ function dismissInAppNotification(params = {}) {
   return platformSpecific.dismissInAppNotification(params);
 }
 
+function setTouchable(value) {
+  return platformSpecific.setTouchable(value);
+}
+
+function appMode() {
+  return _appMode;
+}
+
 function startTabBasedApp(params) {
+  _appMode = 'tabs';
   return platformSpecific.startTabBasedApp(params);
 }
 
 function startSingleScreenApp(params) {
+  _appMode = 'single';
   return platformSpecific.startSingleScreenApp(params);
 }
 
@@ -177,5 +188,7 @@ export default {
   startSingleScreenApp: startSingleScreenApp,
   setEventHandler: setEventHandler,
   clearEventHandler: clearEventHandler,
-  handleDeepLink: handleDeepLink
+  handleDeepLink: handleDeepLink,
+  appMode,
+  setTouchable
 };
