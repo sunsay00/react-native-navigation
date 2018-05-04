@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.view.WindowManager;
 
 import com.facebook.react.bridge.Callback;
 import com.reactnativenavigation.NavigationApplication;
@@ -92,7 +93,7 @@ public class ScreenStack {
     }
 
     public void pushInitialScreen(ScreenParams initialScreenParams, LayoutParams params) {
-        Screen initialScreen = ScreenFactory.create(activity, initialScreenParams, leftButtonOnClickListener);
+        final Screen initialScreen = ScreenFactory.create(activity, initialScreenParams, leftButtonOnClickListener);
         initialScreen.setVisibility(View.INVISIBLE);
         initialScreen.setOnDisplayListener(new Screen.OnDisplayListener() {
             @Override
@@ -100,6 +101,7 @@ public class ScreenStack {
                 if (isStackVisible) {
                     NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", stack.peek().getNavigatorEventId());
                     NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", stack.peek().getNavigatorEventId());
+                    initialScreen.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         });
@@ -238,6 +240,7 @@ public class ScreenStack {
         previous.setVisibility(View.VISIBLE);
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", previous.getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", previous.getNavigatorEventId());
+        previous.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         parent.addView(previous, 0);
     }
 
@@ -427,6 +430,7 @@ public class ScreenStack {
         stack.peek().setVisibility(View.VISIBLE);
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", stack.peek().getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", stack.peek().getNavigatorEventId());
+        stack.peek().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void hide() {

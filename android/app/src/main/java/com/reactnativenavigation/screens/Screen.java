@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.facebook.react.bridge.Callback;
@@ -77,7 +78,7 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
             topBar.onContextualMenuHidden();
             setStyle();
         }
-        if (ViewPagerScreenChangedEvent.TYPE.equals(event.getType()) && isShown() ) {
+        if (ViewPagerScreenChangedEvent.TYPE.equals(event.getType()) && isShown()) {
             topBar.dismissContextualMenu();
             topBar.onViewPagerScreenChanged(getScreenParams());
         }
@@ -257,16 +258,22 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
 
     public abstract void setOnDisplayListener(OnDisplayListener onContentViewDisplayedListener);
 
+    public Window getWindow() {
+        return activity.getWindow();
+    }
+
     public void show() {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", screenParams.getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", screenParams.getNavigatorEventId());
         screenAnimator.show(screenParams.animateScreenTransitions);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void show(boolean animated) {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", screenParams.getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", screenParams.getNavigatorEventId());
         screenAnimator.show(animated);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void show(boolean animated, Runnable onAnimationEnd) {
@@ -274,6 +281,7 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", screenParams.getNavigatorEventId());
         setStyle();
         screenAnimator.show(animated, onAnimationEnd);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void showWithSharedElementsTransitions(Map<String, SharedElementTransition> fromElements, final Runnable onAnimationEnd) {
