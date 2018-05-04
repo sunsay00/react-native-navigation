@@ -8,6 +8,7 @@ import {
 import platformSpecific from './deprecated/platformSpecificDeprecated';
 import Navigation from './Navigation';
 import _ from 'lodash';
+import Busy from './Busy';
 
 const NavigationSpecific = {
   push: platformSpecific.navigatorPush,
@@ -41,6 +42,7 @@ class Navigator {
     if(!this._checkLastAction({method: 'push', passProps: params.passProps, screen: params.screen})) {
       return;
     }
+    Busy.setIsBusy(true);
     return NavigationSpecific.push(this, params);
   }
 
@@ -60,11 +62,8 @@ class Navigator {
     if(!this._checkLastAction({method: 'showModal', passProps: params.passProps, screen: params.screen})) {
       return;
     }
+    Busy.setIsBusy(true);
     return Navigation.showModal(params);
-  }
-
-  showLightBox(params = {}) {
-    return Navigation.showLightBox(params);
   }
 
   dismissModal(params = {}) {
@@ -76,6 +75,7 @@ class Navigator {
   }
 
   showLightBox(params = {}) {
+    Busy.setIsBusy(true);
     return Navigation.showLightBox(params);
   }
 
@@ -185,6 +185,9 @@ class Navigator {
   }
 
   onNavigatorEvent(event) {
+    if (event.id == 'didAppear') {
+      Busy.setIsBusy(false);
+    }
     if (this.navigatorEventHandler) {
       this.navigatorEventHandler(event);
     }

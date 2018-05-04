@@ -3,6 +3,7 @@ import React from 'react';
 import {AppRegistry} from 'react-native';
 import platformSpecific from './deprecated/platformSpecificDeprecated';
 import Screen from './Screen';
+import Busy from './Busy';
 
 import PropRegistry from './PropRegistry';
 
@@ -163,6 +164,7 @@ function handleDeepLink(params = {}) {
 }
 
 export default {
+  getIsBusy: Busy.getIsBusy,
   getRegisteredScreen,
   registerComponent,
   showModal: showModal,
