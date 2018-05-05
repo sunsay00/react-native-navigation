@@ -8,6 +8,7 @@ import PropRegistry from './PropRegistry';
 
 const registeredScreens = {};
 const _allNavigatorEventHandlers = {};
+let _appMode = undefined;
 
 function registerScreen(screenID, generator) {
   registeredScreens[screenID] = generator;
@@ -131,11 +132,17 @@ function dismissInAppNotification(params = {}) {
   return platformSpecific.dismissInAppNotification(params);
 }
 
+function appMode() {
+  return _appMode;
+}
+
 function startTabBasedApp(params) {
+  _appMode = 'tabs';
   return platformSpecific.startTabBasedApp(params);
 }
 
 function startSingleScreenApp(params) {
+  _appMode = 'single';
   return platformSpecific.startSingleScreenApp(params);
 }
 
@@ -177,5 +184,6 @@ export default {
   startSingleScreenApp: startSingleScreenApp,
   setEventHandler: setEventHandler,
   clearEventHandler: clearEventHandler,
-  handleDeepLink: handleDeepLink
+  handleDeepLink: handleDeepLink,
+  appMode,
 };
