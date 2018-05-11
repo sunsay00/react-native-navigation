@@ -23,6 +23,7 @@ import com.reactnativenavigation.views.LeftButtonOnClickListener;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.ArrayList;
 
 public class ScreenStack {
     private static final String TAG = "ScreenStack";
@@ -438,5 +439,13 @@ public class ScreenStack {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didDisappear", stack.peek().getNavigatorEventId());
         isStackVisible = false;
         stack.peek().setVisibility(View.INVISIBLE);
+    }
+
+    public ArrayList<String> getAllNavigatorEventIds(){
+        ArrayList<String> ids = new ArrayList<>();
+        for(Screen screen : stack){
+            ids.add(screen.getNavigatorEventId());
+        }
+        return  ids;
     }
 }
