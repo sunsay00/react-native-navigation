@@ -216,6 +216,9 @@ public class NavigationReactModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setTouchable(final Boolean value) { NavigationCommandsHandler.setTouchable(value); }
+
+    @ReactMethod
     public void showSlidingOverlay(final ReadableMap params) {
         SlidingOverlayParams slidingOverlayParams = new SlidingOverlayParamsParser().parse(BundleConverter.toBundle(params));
         NavigationCommandsHandler.showSlidingOverlay(slidingOverlayParams);

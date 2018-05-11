@@ -1,6 +1,6 @@
 /*eslint-disable*/
-import React, {Component} from 'react';
-import ReactNative, {AppRegistry, NativeModules, processColor} from 'react-native';
+import React, { Component } from 'react';
+import ReactNative, { AppRegistry, NativeModules, processColor } from 'react-native';
 import _ from 'lodash';
 
 import Navigation from './../Navigation';
@@ -247,7 +247,7 @@ function startTabBasedApp(params) {
 
   params.tabs = _.cloneDeep(params.tabs);
 
-  params.tabs.forEach(function(tab, idx) {
+  params.tabs.forEach(function (tab, idx) {
     addNavigatorParams(tab, null, idx);
     addNavigatorButtons(tab, params.drawer);
     addNavigationStyleParams(tab);
@@ -297,7 +297,7 @@ function convertAnimationType(animationType) {
 function navigatorSetButtons(navigator, navigatorEventID, _params) {
   const params = _.cloneDeep(_params);
   if (params.rightButtons) {
-    params.rightButtons.forEach(function(button) {
+    params.rightButtons.forEach(function (button) {
       button.enabled = !button.disabled;
       if (button.icon) {
         const icon = resolveAssetSource(button.icon);
@@ -486,7 +486,7 @@ function addNavigatorButtons(screen, sideMenuParams) {
   // Get image uri from image id
   const rightButtons = getRightButtons(screen);
   if (rightButtons) {
-    rightButtons.forEach(function(button) {
+    rightButtons.forEach(function (button) {
       button.enabled = !button.disabled;
       if (button.icon) {
         const icon = resolveAssetSource(button.icon);
@@ -528,7 +528,7 @@ function getFab(screen) {
   if (fab === null || fab === undefined) {
     return;
   }
-  if (Object.keys(fab).length === 0 ) {
+  if (Object.keys(fab).length === 0) {
     return {};
   }
 
@@ -646,8 +646,8 @@ function dismissSnackbar() {
 function showContextualMenu(navigator, params) {
   const contextualMenu = {
     buttons: [],
-    backButton: {id: 'back'},
-    navigationParams: {navigatorEventID: navigator.navigatorEventID}
+    backButton: { id: 'back' },
+    navigationParams: { navigatorEventID: navigator.navigatorEventID }
   };
 
   params.rightButtons.forEach((button, index) => {
@@ -669,6 +669,10 @@ function showContextualMenu(navigator, params) {
 
 function dismissContextualMenu() {
   newPlatformSpecific.dismissContextualMenu();
+}
+
+function setTouchable(value) {
+  newPlatformSpecific.setTouchable(value);
 }
 
 export default {
@@ -699,5 +703,6 @@ export default {
   showSnackbar,
   dismissSnackbar,
   showContextualMenu,
-  dismissContextualMenu
+  dismissContextualMenu,
+  setTouchable
 };
