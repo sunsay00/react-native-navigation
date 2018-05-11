@@ -675,6 +675,10 @@ function setTouchable(value) {
   newPlatformSpecific.setTouchable(value);
 }
 
+function isTouchable() {
+  return newPlatformSpecific.isTouchable();
+}
+
 export default {
   startTabBasedApp,
   startSingleScreenApp,
@@ -704,5 +708,6 @@ export default {
   dismissSnackbar,
   showContextualMenu,
   dismissContextualMenu,
-  setTouchable
+  setTouchable,
+  isTouchable
 };

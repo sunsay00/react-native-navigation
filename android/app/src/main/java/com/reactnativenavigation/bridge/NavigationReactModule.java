@@ -215,8 +215,11 @@ public class NavigationReactModule extends ReactContextBaseJavaModule {
         NavigationCommandsHandler.dismissTopModal();
     }
 
-    @ReactMethod
-    public void setTouchable(final Boolean value) { NavigationCommandsHandler.setTouchable(value); }
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public void setTouchable(final boolean value) { NavigationCommandsHandler.setTouchable(value); }
+
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public boolean isTouchable() { return NavigationCommandsHandler.isTouchable(); }
 
     @ReactMethod
     public void showSlidingOverlay(final ReadableMap params) {

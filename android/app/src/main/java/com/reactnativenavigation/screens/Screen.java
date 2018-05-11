@@ -266,22 +266,24 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", screenParams.getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", screenParams.getNavigatorEventId());
         screenAnimator.show(screenParams.animateScreenTransitions);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void show(boolean animated) {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", screenParams.getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", screenParams.getNavigatorEventId());
         screenAnimator.show(animated);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    public void show(boolean animated, Runnable onAnimationEnd) {
+    public void show(boolean animated, final Runnable onAnimationEnd) {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", screenParams.getNavigatorEventId());
-        NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", screenParams.getNavigatorEventId());
         setStyle();
-        screenAnimator.show(animated, onAnimationEnd);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        screenAnimator.show(animated, new Runnable() {
+            @Override
+            public void run() {
+                NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", screenParams.getNavigatorEventId());
+                onAnimationEnd.run();
+            }
+        });
     }
 
     public void showWithSharedElementsTransitions(Map<String, SharedElementTransition> fromElements, final Runnable onAnimationEnd) {
@@ -325,10 +327,15 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
         sharedElements.removeHiddenElements();
     }
 
-    private void hide(boolean animated, Runnable onAnimatedEnd) {
+    private void hide(boolean animated, final Runnable onAnimatedEnd) {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willDisappear", screenParams.getNavigatorEventId());
-        NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didDisappear", screenParams.getNavigatorEventId());
-        screenAnimator.hide(animated, onAnimatedEnd);
+        screenAnimator.hide(animated, new Runnable() {
+            @Override
+            public void run() {
+                NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didDisappear", screenParams.getNavigatorEventId());
+                onAnimatedEnd.run();
+            }
+        });
     }
 
     public void showContextualMenu(ContextualMenuParams params, Callback onButtonClicked) {

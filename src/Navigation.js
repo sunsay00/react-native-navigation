@@ -136,6 +136,10 @@ function setTouchable(value) {
   return platformSpecific.setTouchable(value);
 }
 
+function isTouchable() {
+  return platformSpecific.isTouchable();
+}
+
 function appMode() {
   return _appMode;
 }
@@ -190,5 +194,6 @@ export default {
   clearEventHandler: clearEventHandler,
   handleDeepLink: handleDeepLink,
   appMode,
-  setTouchable
+  setTouchable,
+  isTouchable
 };

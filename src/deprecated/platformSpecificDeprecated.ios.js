@@ -611,6 +611,11 @@ function setTouchable(value) {
   // Android only
 }
 
+function isTouchable() {
+  // Android only
+  return true;
+}
+
 export default {
   startTabBasedApp,
   startSingleScreenApp,
@@ -638,5 +643,6 @@ export default {
   navigatorToggleNavBar,
   showContextualMenu,
   dismissContextualMenu,
-  setTouchable
+  setTouchable,
+  isTouchable
 };

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.MotionEvent;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
@@ -52,6 +53,26 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
      * This is somewhat weird, and in the future we better use a single activity with changing contentView similar to ReactNative impl.
      * Along with that, we should handle commands from the bridge using onNewIntent
      */
+    private static boolean touchEnabled = true;
+
+    public static boolean isTouchable() { return NavigationActivity.touchEnabled; }
+    public static void setIsTouchable(boolean value) {
+        if (NavigationActivity.touchEnabled == value) return;
+        NavigationActivity.touchEnabled = value;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (!NavigationActivity.touchEnabled) return true;
+        else return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (!NavigationActivity.touchEnabled) return true;
+        else return super.dispatchKeyEvent(event);
+    }
+
     static NavigationActivity currentActivity;
 
     private ActivityParams activityParams;
@@ -62,6 +83,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (!NavigationApplication.instance.isReactContextInitialized()) {
             NavigationApplication.instance.startReactContextOnceInBackgroundAndExecuteJS();
             return;
@@ -151,6 +173,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         destroyLayouts();
         destroyJsIfNeeded();
         NavigationApplication.instance.getActivityCallbacks().onActivityDestroyed(this);
+
         super.onDestroy();
     }
 
@@ -248,7 +271,6 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         Screen previousScreen = layout.getCurrentScreen();
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", previousScreen.getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", previousScreen.getNavigatorEventId());
-        previousScreen.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     void dismissAllModals() {
@@ -256,7 +278,6 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         Screen previousScreen = layout.getCurrentScreen();
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", previousScreen.getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", previousScreen.getNavigatorEventId());
-        previousScreen.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void showLightBox(LightBoxParams params) {

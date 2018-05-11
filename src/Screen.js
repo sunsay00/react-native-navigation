@@ -27,6 +27,7 @@ class Navigator {
   }
 
   push(params = {}) {
+    if (!Navigation.isTouchable()) return;
     Navigation.setTouchable(false);
     return NavigationSpecific.push(this, params);
   }
@@ -44,6 +45,7 @@ class Navigator {
   }
 
   showModal(params = {}) {
+    if (!Navigation.isTouchable()) return;
     Navigation.setTouchable(false);
     return Navigation.showModal(params);
   }
@@ -57,6 +59,7 @@ class Navigator {
   }
 
   showLightBox(params = {}) {
+    if (!Navigation.isTouchable()) return;
     Navigation.setTouchable(false);
     return Navigation.showLightBox(params);
   }
@@ -167,6 +170,9 @@ class Navigator {
   }
 
   onNavigatorEvent(event) {
+    if (event.id == 'didAppear') {
+      Navigation.setTouchable(true);
+    }
     if (this.navigatorEventHandler) {
       this.navigatorEventHandler(event);
     }

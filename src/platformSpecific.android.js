@@ -177,6 +177,10 @@ function setTouchable(value) {
   NativeReactModule.setTouchable(value);
 }
 
+function isTouchable() {
+  return NativeReactModule.isTouchable();
+}
+
 module.exports = {
   startApp,
   push,
@@ -210,5 +214,6 @@ module.exports = {
   showContextualMenu,
   dismissContextualMenu,
   setScreenStyle,
-  setTouchable
+  setTouchable,
+  isTouchable,
 };
