@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.view.WindowManager;
 
 import com.facebook.react.bridge.Callback;
 import com.reactnativenavigation.NavigationApplication;
@@ -20,6 +21,7 @@ import com.reactnativenavigation.utils.KeyboardVisibilityDetector;
 import com.reactnativenavigation.utils.Task;
 import com.reactnativenavigation.views.LeftButtonOnClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -92,7 +94,7 @@ public class ScreenStack {
     }
 
     public void pushInitialScreen(ScreenParams initialScreenParams, LayoutParams params) {
-        Screen initialScreen = ScreenFactory.create(activity, initialScreenParams, leftButtonOnClickListener);
+        final Screen initialScreen = ScreenFactory.create(activity, initialScreenParams, leftButtonOnClickListener);
         initialScreen.setVisibility(View.INVISIBLE);
         initialScreen.setOnDisplayListener(new Screen.OnDisplayListener() {
             @Override
@@ -100,6 +102,7 @@ public class ScreenStack {
                 if (isStackVisible) {
                     NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", stack.peek().getNavigatorEventId());
                     NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", stack.peek().getNavigatorEventId());
+                    initialScreen.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         });
@@ -238,6 +241,7 @@ public class ScreenStack {
         previous.setVisibility(View.VISIBLE);
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", previous.getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", previous.getNavigatorEventId());
+        previous.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         parent.addView(previous, 0);
     }
 
@@ -427,6 +431,7 @@ public class ScreenStack {
         stack.peek().setVisibility(View.VISIBLE);
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("willAppear", stack.peek().getNavigatorEventId());
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didAppear", stack.peek().getNavigatorEventId());
+        stack.peek().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void hide() {
@@ -434,5 +439,13 @@ public class ScreenStack {
         NavigationApplication.instance.getEventEmitter().sendScreenChangedEvent("didDisappear", stack.peek().getNavigatorEventId());
         isStackVisible = false;
         stack.peek().setVisibility(View.INVISIBLE);
+    }
+
+    public ArrayList<String> getAllNavigatorEventIds(){
+        ArrayList<String> ids = new ArrayList<>();
+        for(Screen screen : stack){
+            ids.add(screen.getNavigatorEventId());
+        }
+        return  ids;
     }
 }

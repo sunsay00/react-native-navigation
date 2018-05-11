@@ -349,7 +349,12 @@
 }
 
 +(void)sendScreenTabPressedEvent:(UIViewController*)viewController body:(NSDictionary*)body{
-  [RCCTabBarController sendTabEvent:@"bottomTabReselected" controller:viewController body:body];
+  UINavigationController *navigationController = (UINavigationController*)viewController;
+  NSArray * controllerArray = [navigationController viewControllers];
+  
+  for (UIViewController *controller in controllerArray){
+     [RCCTabBarController sendTabEvent:@"bottomTabReselected" controller:controller body:body];
+  }
 }
 
 +(void)sendTabEvent:(NSString *)event controller:(UIViewController*)viewController body:(NSDictionary*)body{

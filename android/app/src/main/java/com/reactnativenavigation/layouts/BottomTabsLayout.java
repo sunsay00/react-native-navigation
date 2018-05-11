@@ -34,6 +34,7 @@ import com.reactnativenavigation.views.SnackbarAndFabContainer;
 import com.reactnativenavigation.views.slidingOverlay.SlidingOverlay;
 import com.reactnativenavigation.views.slidingOverlay.SlidingOverlaysQueue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -397,9 +398,12 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
     }
 
     private void sendTabReselectedEventToJs() {
-        WritableMap data = Arguments.createMap();
-        String navigatorEventId = getCurrentScreenStack().peek().getNavigatorEventId();
-        NavigationApplication.instance.getEventEmitter().sendNavigatorEvent("bottomTabReselected", navigatorEventId, data);
+        ArrayList<String> ids = getCurrentScreenStack().getAllNavigatorEventIds();
+        for(String navigatorEventId: ids) {
+            WritableMap data = Arguments.createMap();
+            //String navigatorEventId = getCurrentScreenStack().peek().getNavigatorEventId();
+            NavigationApplication.instance.getEventEmitter().sendNavigatorEvent("bottomTabReselected", navigatorEventId, data);
+        }
     }
 
     private void showNewStack(int position) {
