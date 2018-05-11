@@ -326,6 +326,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     }
 
     public void setScreenStyle(String screenInstanceId, Bundle styleParams) {
+        if (layout == null) return;
         layout.updateScreenStyle(screenInstanceId, styleParams);
         modalController.updateScreenStyle(screenInstanceId, styleParams);
     }
