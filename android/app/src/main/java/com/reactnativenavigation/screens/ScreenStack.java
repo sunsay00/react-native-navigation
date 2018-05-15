@@ -438,11 +438,8 @@ public class ScreenStack {
         stack.peek().setVisibility(View.INVISIBLE);
     }
 
-    public ArrayList<String> getAllNavigatorEventIds(){
-        ArrayList<String> ids = new ArrayList<>();
-        for(Screen screen : stack){
-            ids.add(screen.getNavigatorEventId());
-        }
-        return  ids;
+    
+    public Stack<Screen> getStack(){
+        return stack;
     }
 }
